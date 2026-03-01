@@ -1,2 +1,26 @@
 .venv/
 trash/
+.env
+__pycache__/
+*.pyc
+
+# Docker & DB (самое важное)
+pgdata/
+*/pgdata/
+.docker/
+docker-compose.override.yml
+
+# IDE (чтобы настройки твоего монитора/шрифтов не летели коллегам)
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Нагрузочное тестирование (Locust/метрики)
+.locust-data/
+logs/
+*.log

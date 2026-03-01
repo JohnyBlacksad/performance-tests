@@ -1,2 +1,0 @@
-termcolor==3.3.0
-redis==7.2.1
