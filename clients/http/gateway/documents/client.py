@@ -1,5 +1,6 @@
 from httpx import Response
-from base_client import BaseHTTPClient
+from clients.http.base_client import BaseHTTPClient
+from clients.http.gateway.gateway_client import build_gateway_http_client
 
 class DocumentsGatewayHTTPClient(BaseHTTPClient):
     """HTTP-клиент для Documents Gateway API."""
@@ -25,3 +26,11 @@ class DocumentsGatewayHTTPClient(BaseHTTPClient):
             HTTP-ответ с договором.
         """
         return self.get(f'documents/contract-document/{account_id}')
+
+def build_documents_gateway_http_client() -> DocumentsGatewayHTTPClient:
+    """Создать HTTP-клиент для Documents Gateway API.
+
+    Returns:
+        Настроенный экземпляр DocumentsGatewayHTTPClient.
+    """
+    return DocumentsGatewayHTTPClient(client=build_gateway_http_client())

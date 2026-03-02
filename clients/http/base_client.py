@@ -12,7 +12,6 @@ class BaseHTTPClient:
             client: Экземпляр httpx Client.
         """
         self.client = client
-        self.client.base_url = 'http://localhost:8003/api/v1/'
 
     def get(self, url: URL|str, params: QueryParams|dict|None = None) -> Response:
         """Отправить GET-запрос.
