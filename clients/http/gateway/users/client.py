@@ -13,7 +13,6 @@
 from uuid import uuid4
 from clients.http.base_client import BaseHTTPClient
 from httpx import Response
-from typing import TypedDict
 from clients.http.gateway.gateway_client import build_gateway_http_client
 from .schema import (
     GetUserResponseSchema,
@@ -56,17 +55,21 @@ class UserGatewayHTTPClient(BaseHTTPClient):
         Отправляет POST-запрос на создание нового пользователя.
 
         Args:
-            request: Словарь с данными для создания пользователя
-                     (email, lastName, firstName, middleName, phoneNumber).
+            request: Модель запроса на создание пользователя
+                     (CreateUserRequestSchema).
 
         Returns:
             HTTP-ответ с результатом создания.
 
         Example:
             >>> client = build_users_gateway_http_client()
-            >>> request = {'email': 'test@example.com', 'lastName': 'Ivanov',
-            ...            'firstName': 'Ivan', 'middleName': 'Ivanovich',
-            ...            'phoneNumber': '+79991234567'}
+            >>> request = CreateUserRequestSchema(
+            ...     email='test@example.com',
+            ...     last_name='Ivanov',
+            ...     first_name='Ivan',
+            ...     middle_name='Ivanovich',
+            ...     phone_number='+79991234567'
+            ... )
             >>> response = client.create_user_api(request)
         """
         return self.post('users', json=request.model_dump(by_alias=True))
@@ -75,18 +78,18 @@ class UserGatewayHTTPClient(BaseHTTPClient):
         """Получить пользователя по ID (высокоуровневый метод).
 
         Создаёт и отправляет запрос на получение данных пользователя,
-        возвращая их в виде словаря.
+        возвращая их в виде модели GetUserResponseSchema.
 
         Args:
             user_id: Уникальный идентификатор пользователя.
 
         Returns:
-            Словарь с данными пользователя.
+            Модель GetUserResponseSchema с данными пользователя.
 
         Example:
             >>> client = build_users_gateway_http_client()
             >>> user_data = client.get_user(user_id='u123')
-            >>> print(user_data['user']['email'])
+            >>> print(user_data.user.email)
         """
         response = self.get_user_api(user_id)
         return GetUserResponseSchema.model_validate_json(response.text)
@@ -98,12 +101,12 @@ class UserGatewayHTTPClient(BaseHTTPClient):
         Использует UUID для генерации уникального email.
 
         Returns:
-            Словарь с данными созданного пользователя.
+            Модель CreateUserResponseSchema с данными созданного пользователя.
 
         Example:
             >>> client = build_users_gateway_http_client()
             >>> new_user = client.create_user()
-            >>> print(new_user['user']['id'])
+            >>> print(new_user.user.id)
         """
         response = self.create_user_api(
             CreateUserRequestSchema(

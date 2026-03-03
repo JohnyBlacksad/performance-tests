@@ -48,7 +48,7 @@ class BaseHTTPClient:
         """
         return self.client.get(url, params=params)
 
-    def post(self, url: URL | str, json: Any = None) -> Response:
+    def post(self, url: URL | str, json: Any = None, params: QueryParams | dict | None = None) -> Response:
         """Отправить POST-запрос к указанному URL.
 
         Args:
@@ -61,4 +61,4 @@ class BaseHTTPClient:
         Raises:
             httpx.HTTPError: При возникновении ошибок HTTP.
         """
-        return self.client.post(url, json=json)
+        return self.client.post(url, json=json, params=params)

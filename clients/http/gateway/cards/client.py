@@ -9,78 +9,15 @@
     >>> response = client.issue_virtual_card(user_id='u123', account_id='a456')
 """
 
-from __future__ import annotations
 from httpx import Response
 from clients.http.base_client import BaseHTTPClient
-from typing import TypedDict
 from clients.http.gateway.gateway_client import build_gateway_http_client
-
-
-class CardDict(TypedDict):
-    """Словарь, представляющий данные карты.
-
-    Attributes:
-        id: Уникальный идентификатор карты.
-        pin: PIN-код карты.
-        cvv: CVV-код карты.
-        type: Тип карты.
-        status: Статус карты.
-        accountId: Идентификатор счёта, к которому привязана карта.
-        cardNumber: Номер карты.
-        cardHolder: Имя держателя карты.
-        expiryDate: Срок действия карты.
-        paymentSystem: Платёжная система карты.
-    """
-    id: str
-    pin: str
-    cvv: str
-    type: str
-    status: str
-    accountId: str
-    cardNumber: str
-    cardHolder: str
-    expiryDate: str
-    paymentSystem: str
-
-
-class IssueVirtualCardResponseDict(TypedDict):
-    """Словарь ответа на выпуск виртуальной карты.
-
-    Attributes:
-        card: Данные выпущенной карты.
-    """
-    card: CardDict
-
-
-class IssuePhysicalCardResponseDict(TypedDict):
-    """Словарь ответа на выпуск физической карты.
-
-    Attributes:
-        card: Данные выпущенной карты.
-    """
-    card: CardDict
-
-
-class IssueVirtualCardRequestDict(TypedDict):
-    """Словарь запроса на выпуск виртуальной карты.
-
-    Attributes:
-        userId: Уникальный идентификатор пользователя.
-        accountId: Уникальный идентификатор счёта.
-    """
-    userId: str
-    accountId: str
-
-
-class IssuePhysicalCardRequestDict(TypedDict):
-    """Словарь запроса на выпуск физической карты.
-
-    Attributes:
-        userId: Уникальный идентификатор пользователя.
-        accountId: Уникальный идентификатор счёта.
-    """
-    userId: str
-    accountId: str
+from .schema import (
+    IssueVirtualCardRequestSchema,
+    IssueVirtualCardResponseSchema,
+    IssuePhysicalCardRequestSchema,
+    IssuePhysicalCardResponseSchema
+)
 
 
 class CardsGatewayHTTPClient(BaseHTTPClient):
@@ -93,95 +30,101 @@ class CardsGatewayHTTPClient(BaseHTTPClient):
         >>> card_data = client.issue_virtual_card(user_id='u123', account_id='a456')
     """
 
-    def issue_virtual_card_api(self, request: IssueVirtualCardRequestDict) -> Response:
+    def issue_virtual_card_api(self, request: IssueVirtualCardRequestSchema) -> Response:
         """Выпустить виртуальную карту (API-метод).
 
         Отправляет POST-запрос на выпуск виртуальной карты.
 
         Args:
-            request: Словарь с данными для выпуска виртуальной карты
-                     (userId, accountId).
+            request: Модель запроса на выпуск виртуальной карты
+                     (IssueVirtualCardRequestSchema).
 
         Returns:
             HTTP-ответ от сервера.
 
         Example:
             >>> client = build_cards_gateway_http_client()
-            >>> request = {'userId': 'u123', 'accountId': 'a456'}
+            >>> request = IssueVirtualCardRequestSchema(
+            ...     user_id='u123',
+            ...     account_id='a456'
+            ... )
             >>> response = client.issue_virtual_card_api(request)
         """
-        return self.post('cards/issue-virtual-card', json=request)
+        return self.post('cards/issue-virtual-card', json=request.model_dump(by_alias=True))
 
-    def issue_physical_card_api(self, request: IssuePhysicalCardRequestDict) -> Response:
+    def issue_physical_card_api(self, request: IssuePhysicalCardRequestSchema) -> Response:
         """Выпустить физическую карту (API-метод).
 
         Отправляет POST-запрос на выпуск физической карты.
 
         Args:
-            request: Словарь с данными для выпуска физической карты
-                     (userId, accountId).
+            request: Модель запроса на выпуск физической карты
+                     (IssuePhysicalCardRequestSchema).
 
         Returns:
             HTTP-ответ от сервера.
 
         Example:
             >>> client = build_cards_gateway_http_client()
-            >>> request = {'userId': 'u123', 'accountId': 'a456'}
+            >>> request = IssuePhysicalCardRequestSchema(
+            ...     user_id='u123',
+            ...     account_id='a456'
+            ... )
             >>> response = client.issue_physical_card_api(request)
         """
-        return self.post('cards/issue-physical-card', json=request)
+        return self.post('cards/issue-physical-card', json=request.model_dump(by_alias=True))
 
-    def issue_virtual_card(self, user_id: str, account_id: str) -> IssueVirtualCardResponseDict:
+    def issue_virtual_card(self, user_id: str, account_id: str) -> IssueVirtualCardResponseSchema:
         """Выпустить виртуальную карту (высокоуровневый метод).
 
         Создаёт и отправляет запрос на выпуск виртуальной карты,
-        возвращая данные карты в виде словаря.
+        возвращая данные карты в виде модели IssueVirtualCardResponseSchema.
 
         Args:
             user_id: Уникальный идентификатор пользователя.
             account_id: Уникальный идентификатор счёта.
 
         Returns:
-            Словарь с данными выпущенной карты.
+            Модель IssueVirtualCardResponseSchema с данными выпущенной карты.
 
         Example:
             >>> client = build_cards_gateway_http_client()
             >>> card = client.issue_virtual_card(user_id='u123', account_id='a456')
-            >>> print(card['card']['cardNumber'])
+            >>> print(card.card.card_number)
         """
-        request = IssueVirtualCardRequestDict(
-            userId=user_id,
-            accountId=account_id
+        request = IssueVirtualCardRequestSchema(
+            user_id=user_id, # type: ignore
+            account_id=account_id # type: ignore
         )
 
         response = self.issue_virtual_card_api(request)
-        return response.json()
+        return IssueVirtualCardResponseSchema.model_validate_json(response.text)
 
-    def issue_physical_card(self, user_id: str, account_id: str) -> IssuePhysicalCardResponseDict:
+    def issue_physical_card(self, user_id: str, account_id: str) -> IssuePhysicalCardResponseSchema:
         """Выпустить физическую карту (высокоуровневый метод).
 
         Создаёт и отправляет запрос на выпуск физической карты,
-        возвращая данные карты в виде словаря.
+        возвращая данные карты в виде модели IssuePhysicalCardResponseSchema.
 
         Args:
             user_id: Уникальный идентификатор пользователя.
             account_id: Уникальный идентификатор счёта.
 
         Returns:
-            Словарь с данными выпущенной карты.
+            Модель IssuePhysicalCardResponseSchema с данными выпущенной карты.
 
         Example:
             >>> client = build_cards_gateway_http_client()
             >>> card = client.issue_physical_card(user_id='u123', account_id='a456')
-            >>> print(card['card']['cardNumber'])
+            >>> print(card.card.card_number)
         """
-        request = IssuePhysicalCardRequestDict(
-            userId=user_id,
-            accountId=account_id
+        request = IssuePhysicalCardRequestSchema(
+            user_id=user_id, # type: ignore
+            account_id=account_id # type: ignore
         )
 
         response = self.issue_physical_card_api(request)
-        return response.json()
+        return IssuePhysicalCardResponseSchema.model_validate_json(response.text)
 
 
 def build_cards_gateway_http_client() -> CardsGatewayHTTPClient:
