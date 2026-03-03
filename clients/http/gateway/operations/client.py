@@ -463,7 +463,7 @@ class OperationsGatewayHTTPClient(BaseHTTPClient):
             >>> request = {'status': 'completed', 'amount': 100, 'cardId': 'c1', 'accountId': 'a1'}
             >>> response = client.make_fee_operation_api(request)
         """
-        return self.post('operations/make_fee_operation', json=request)
+        return self.post('operations/make-fee-operation', json=request)
 
     def make_fee_operation(self, card_id: str, account_id: str) -> MakeFeeOperationResponseDict:
         """Создать операцию начисления комиссии (высокоуровневый метод).
@@ -507,7 +507,7 @@ class OperationsGatewayHTTPClient(BaseHTTPClient):
             >>> request = {'status': 'completed', 'amount': 5000, 'cardId': 'c1', 'accountId': 'a1'}
             >>> response = client.make_top_up_operation_api(request)
         """
-        return self.post('operations/make_top_up_operation', json=request)
+        return self.post('operations/make-top-up-operation', json=request)
 
     def make_top_up_operation(self, card_id: str, account_id: str) -> MakeTopUpOperationResponseDict:
         """Создать операцию пополнения счёта (высокоуровневый метод).
@@ -551,7 +551,7 @@ class OperationsGatewayHTTPClient(BaseHTTPClient):
             >>> request = {'status': 'completed', 'amount': 500, 'cardId': 'c1', 'accountId': 'a1'}
             >>> response = client.make_cashback_operation_api(request)
         """
-        return self.post('operations/make_cashback_operation', json=request)
+        return self.post('operations/make-cashback-operation', json=request)
 
     def make_cashback_operation(self, card_id: str, account_id: str) -> MakeCashbackOperationResponseDict:
         """Создать операцию начисления кэшбэка (высокоуровневый метод).
@@ -595,7 +595,7 @@ class OperationsGatewayHTTPClient(BaseHTTPClient):
             >>> request = {'status': 'completed', 'amount': 10000, 'cardId': 'c1', 'accountId': 'a1'}
             >>> response = client.make_transfer_operation_api(request)
         """
-        return self.post('operations/make_transfer_operation', json=request)
+        return self.post('operations/make-transfer-operation', json=request)
 
     def make_transfer_operation(self, card_id: str, account_id: str) -> MakeTransferOperationResponseDict:
         """Создать операцию перевода средств (высокоуровневый метод).
@@ -639,7 +639,7 @@ class OperationsGatewayHTTPClient(BaseHTTPClient):
             >>> request = {'status': 'completed', 'amount': 2500, 'cardId': 'c1', 'accountId': 'a1', 'category': 'groceries'}
             >>> response = client.make_purchase_operation_api(request)
         """
-        return self.post('operations/make_purchase_operation', json=request)
+        return self.post('operations/make-purchase-operation', json=request)
 
     def make_purchase_operation(self, card_id: str, account_id: str) -> MakePurchaseOperationResponseDict:
         """Создать операцию покупки (высокоуровневый метод).
@@ -685,7 +685,7 @@ class OperationsGatewayHTTPClient(BaseHTTPClient):
             >>> request = {'status': 'completed', 'amount': 3000, 'cardId': 'c1', 'accountId': 'a1'}
             >>> response = client.make_bill_payment_operation_api(request)
         """
-        return self.post('operations/make_bill_payment_operation', json=request)
+        return self.post('operations/make-bill-payment-operation', json=request)
 
     def make_bill_payment_operation(self, card_id: str, account_id: str) -> MakeBillPaymentOperationResponseDict:
         """Создать операцию оплаты счёта (высокоуровневый метод).
@@ -729,7 +729,7 @@ class OperationsGatewayHTTPClient(BaseHTTPClient):
             >>> request = {'status': 'completed', 'amount': 5000, 'cardId': 'c1', 'accountId': 'a1'}
             >>> response = client.make_cash_withdrawal_operation_api(request)
         """
-        return self.post('operations/make_cash_withdrawal_operation', json=request)
+        return self.post('operations/make-cash-withdrawal-operation', json=request)
 
     def make_cash_withdrawal_operation(self, card_id: str, account_id: str) -> MakeCashWithdrawalOperationResponseDict:
         """Создать операцию снятия наличных (высокоуровневый метод).
