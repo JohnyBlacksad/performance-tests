@@ -15,60 +15,11 @@ from clients.http.base_client import BaseHTTPClient
 from httpx import Response
 from typing import TypedDict
 from clients.http.gateway.gateway_client import build_gateway_http_client
-
-
-class CreateUserRequestDict(TypedDict):
-    """Словарь, представляющий запрос на создание пользователя.
-
-    Attributes:
-        email: Электронная почта пользователя.
-        lastName: Фамилия пользователя.
-        firstName: Имя пользователя.
-        middleName: Отчество пользователя.
-        phoneNumber: Номер телефона пользователя.
-    """
-    email: str
-    lastName: str
-    firstName: str
-    middleName: str
-    phoneNumber: str
-
-
-class UserDict(TypedDict):
-    """Словарь, представляющий данные пользователя.
-
-    Attributes:
-        id: Уникальный идентификатор пользователя.
-        email: Электронная почта пользователя.
-        lastName: Фамилия пользователя.
-        firstName: Имя пользователя.
-        middleName: Отчество пользователя.
-        phoneNumber: Номер телефона пользователя.
-    """
-    id: str
-    email: str
-    lastName: str
-    firstName: str
-    middleName: str
-    phoneNumber: str
-
-
-class GetUserResponseDict(TypedDict):
-    """Словарь ответа на получение данных пользователя.
-
-    Attributes:
-        user: Данные пользователя.
-    """
-    user: UserDict
-
-
-class CreateUserResponseDict(TypedDict):
-    """Словарь ответа на создание пользователя.
-
-    Attributes:
-        user: Данные созданного пользователя.
-    """
-    user: UserDict
+from .schema import (
+    GetUserResponseSchema,
+    CreateUserRequestSchema,
+    CreateUserResponseSchema
+)
 
 
 class UserGatewayHTTPClient(BaseHTTPClient):
@@ -99,7 +50,7 @@ class UserGatewayHTTPClient(BaseHTTPClient):
         """
         return self.get(f'users/{user_id}')
 
-    def create_user_api(self, request: CreateUserRequestDict) -> Response:
+    def create_user_api(self, request: CreateUserRequestSchema) -> Response:
         """Создать нового пользователя (API-метод).
 
         Отправляет POST-запрос на создание нового пользователя.
@@ -118,9 +69,9 @@ class UserGatewayHTTPClient(BaseHTTPClient):
             ...            'phoneNumber': '+79991234567'}
             >>> response = client.create_user_api(request)
         """
-        return self.post('users', json=request)
+        return self.post('users', json=request.model_dump(by_alias=True))
 
-    def get_user(self, user_id: str) -> GetUserResponseDict:
+    def get_user(self, user_id: str) -> GetUserResponseSchema:
         """Получить пользователя по ID (высокоуровневый метод).
 
         Создаёт и отправляет запрос на получение данных пользователя,
@@ -138,9 +89,9 @@ class UserGatewayHTTPClient(BaseHTTPClient):
             >>> print(user_data['user']['email'])
         """
         response = self.get_user_api(user_id)
-        return response.json()
+        return GetUserResponseSchema.model_validate_json(response.text)
 
-    def create_user(self) -> CreateUserResponseDict:
+    def create_user(self) -> CreateUserResponseSchema:
         """Создать нового пользователя с автоматически сгенерированными данными.
 
         Создаёт пользователя со случайным email и тестовыми данными.
@@ -155,16 +106,16 @@ class UserGatewayHTTPClient(BaseHTTPClient):
             >>> print(new_user['user']['id'])
         """
         response = self.create_user_api(
-            CreateUserRequestDict(
+            CreateUserRequestSchema(
                 email=f'{str(uuid4())[:6]}@example.com',
-                lastName='string',
-                middleName='string',
-                firstName='string',
-                phoneNumber='string'
+                last_name='string', # type: ignore
+                middle_name='string', # type: ignore
+                first_name='string', # type: ignore
+                phone_number='string' # type: ignore
             )
         )
 
-        return response.json()
+        return CreateUserResponseSchema.model_validate_json(response.text)
 
 
 def build_users_gateway_http_client() -> UserGatewayHTTPClient:
