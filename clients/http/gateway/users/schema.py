@@ -6,7 +6,8 @@
 """
 
 from pydantic import BaseModel, EmailStr, Field, ConfigDict
-
+from tools.fakers import faker_ru, faker_en
+from random import choice
 
 class CreateUserRequestSchema(BaseModel):
     """Модель запроса на создание пользователя.
@@ -26,6 +27,30 @@ class CreateUserRequestSchema(BaseModel):
     middle_name: str = Field(alias='middleName', description="Отчество пользователя")
     phone_number: str = Field(alias='phoneNumber', description="Номер телефона пользователя")
 
+    @classmethod
+    def fake_ru_user(cls):
+        return cls(
+            email = faker_ru.email(),
+            last_name = faker_ru.last_name(), # type: ignore
+            first_name = faker_ru.first_name(), # type: ignore
+            middle_name = faker_ru.middle_name(), # type: ignore
+            phone_number = faker_ru.phone_number() # type: ignore
+        )
+
+    @classmethod
+    def fake_en_user(cls):
+        return cls(
+            email = faker_en.email(),
+            last_name = faker_en.last_name(), # type: ignore
+            first_name = faker_en.first_name(), # type: ignore
+            middle_name = faker_en.middle_name(), # type: ignore
+            phone_number = faker_en.phone_number() # type: ignore
+        )
+
+    @classmethod
+    def get_fake_user_data(cls):
+        users = [cls.fake_ru_user(), cls.fake_en_user()]
+        return choice(users)
 
 class UserSchema(BaseModel):
     """Модель пользователя.

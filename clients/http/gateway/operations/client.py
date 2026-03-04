@@ -243,11 +243,9 @@ class OperationsGatewayHTTPClient(BaseHTTPClient):
             >>> operation = client.make_fee_operation(card_id='c1', account_id='a1')
             >>> print(operation.operation.id)
         """
-        request = MakeFeeOperationRequestSchema(
-            status='COMPLETED', # type: ignore
-            amount=550,
-            card_id=card_id, # type: ignore
-            account_id=account_id # type: ignore
+        request = MakeFeeOperationRequestSchema.get_fake_data(
+            card_id=card_id,
+            account_id=account_id
         )
         response = self.make_fee_operation_api(request)
         return MakeFeeOperationResponseSchema.model_validate_json(response.text)
@@ -293,12 +291,7 @@ class OperationsGatewayHTTPClient(BaseHTTPClient):
             >>> operation = client.make_top_up_operation(card_id='c1', account_id='a1')
             >>> print(operation.operation.amount)
         """
-        request = MakeTopUpOperationRequestSchema(
-            status='COMPLETED', # type: ignore
-            amount=50,
-            card_id=card_id, # type: ignore
-            account_id=account_id # type: ignore
-        )
+        request = MakeTopUpOperationRequestSchema.get_fake_data(card_id=card_id, account_id=account_id)
         response = self.make_top_up_operation_api(request)
         return MakeTopUpOperationResponseSchema.model_validate_json(response.text)
 
@@ -343,11 +336,9 @@ class OperationsGatewayHTTPClient(BaseHTTPClient):
             >>> operation = client.make_cashback_operation(card_id='c1', account_id='a1')
             >>> print(operation.operation.amount)
         """
-        request = MakeCashbackOperationRequestSchema(
-            status='COMPLETED', # type: ignore
-            amount=50,
-            card_id=card_id, # type: ignore
-            account_id=account_id # type: ignore
+        request = MakeCashbackOperationRequestSchema.get_fake_data(
+            card_id=card_id,
+            account_id=account_id
         )
         response = self.make_cashback_operation_api(request)
         return MakeCashbackOperationResponseSchema.model_validate_json(response.text)
@@ -393,11 +384,9 @@ class OperationsGatewayHTTPClient(BaseHTTPClient):
             >>> operation = client.make_transfer_operation(card_id='c1', account_id='a1')
             >>> print(operation.operation.amount)
         """
-        request = MakeTransferOperationRequestSchema(
-            status='COMPLETED', # type: ignore
-            amount=50,
-            card_id=card_id, # type: ignore
-            account_id=account_id # type: ignore
+        request = MakeTransferOperationRequestSchema.get_fake_data(
+            card_id=card_id,
+            account_id=account_id
         )
         response = self.make_transfer_operation_api(request)
         return MakeTransferOperationResponseSchema.model_validate_json(response.text)
@@ -445,12 +434,9 @@ class OperationsGatewayHTTPClient(BaseHTTPClient):
             >>> operation = client.make_purchase_operation(card_id='c1', account_id='a1')
             >>> print(operation.operation.category)
         """
-        request = MakePurchaseOperationRequestSchema(
-            status='COMPLETED', # type: ignore
-            amount=50,
-            card_id=card_id, # type: ignore
-            account_id=account_id, # type: ignore
-            category='coffee'
+        request = MakePurchaseOperationRequestSchema.get_fake_data(
+            card_id=card_id,
+            account_id=account_id
         )
         response = self.make_purchase_operation_api(request)
         return MakePurchaseOperationResponseSchema.model_validate_json(response.text)
@@ -496,11 +482,9 @@ class OperationsGatewayHTTPClient(BaseHTTPClient):
             >>> operation = client.make_bill_payment_operation(card_id='c1', account_id='a1')
             >>> print(operation.operation.amount)
         """
-        request = MakeBillPaymentOperationRequestSchema(
-            status='COMPLETED', # type: ignore
-            amount=50,
-            card_id=card_id, # type: ignore
-            account_id=account_id # type: ignore
+        request = MakeBillPaymentOperationRequestSchema.get_fake_data(
+            card_id=card_id,
+            account_id=account_id
         )
         response = self.make_bill_payment_operation_api(request)
         return MakeBillPaymentOperationResponseSchema.model_validate_json(response.text)
@@ -546,11 +530,9 @@ class OperationsGatewayHTTPClient(BaseHTTPClient):
             >>> operation = client.make_cash_withdrawal_operation(card_id='c1', account_id='a1')
             >>> print(operation.operation.amount)
         """
-        request = MakeCashWithdrawalOperationRequestSchema(
-            status='COMPLETED', # type: ignore
-            amount=50,
-            card_id=card_id, # type: ignore
-            account_id=account_id # type: ignore
+        request = MakeCashWithdrawalOperationRequestSchema.get_fake_data(
+            card_id=card_id,
+            account_id=account_id
         )
         response = self.make_cash_withdrawal_operation_api(request)
         return MakeCashWithdrawalOperationResponseSchema.model_validate_json(response.text)
