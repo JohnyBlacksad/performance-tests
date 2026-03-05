@@ -1,14 +1,17 @@
 from uuid import uuid4
 from faker import Faker
 from faker.providers.python import TEnum
+from google.protobuf.internal.enum_type_wrapper import EnumTypeWrapper
 
 class Fake:
     def __init__(self, faker: Faker):
         self.faker = faker
 
-
     def enum(self, value: type[TEnum]):
         return self.faker.enum(value)
+
+    def proto_enum(self, value: EnumTypeWrapper) -> int:
+        return self.faker.random_element(value.values())
 
     def email(self):
         return f'{str(uuid4())[:6]}.{self.faker.email()}'
