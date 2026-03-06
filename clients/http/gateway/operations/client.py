@@ -10,9 +10,10 @@
     >>> operations = client.get_operations_api({'accountId': 'a123'})
 """
 
+from locust.env import Environment
 from httpx import Response, QueryParams
-from clients.http.base_client import BaseHTTPClient
-from clients.http.gateway.gateway_client import build_gateway_http_client
+from clients.http.base_client import BaseHTTPClient, HTTPClientExtensions
+from clients.http.gateway.gateway_client import build_gateway_http_client, build_gateway_locust_http_client
 from .schema import (
     GetOperationsQuerySchema,
     GetOperationResponseSchema,
@@ -64,7 +65,8 @@ class OperationsGatewayHTTPClient(BaseHTTPClient):
             >>> params = GetOperationsQuerySchema(account_id='a123')
             >>> response = client.get_operations_api(params)
         """
-        return self.get('operations', params=QueryParams(**params.model_dump(by_alias=True)))
+        return self.get('operations', params=QueryParams(**params.model_dump(by_alias=True)),
+                        extensions=HTTPClientExtensions(route='operations'))
 
     def get_operations(self, account_id: str) -> GetOperationsResponseSchema:
         """Получить список операций по счёту (высокоуровневый метод).
@@ -105,7 +107,8 @@ class OperationsGatewayHTTPClient(BaseHTTPClient):
             >>> response = client.get_operations_summary_api(params)
         """
         return self.get('operations/operations-summary',
-                        params=QueryParams(**params.model_dump(by_alias=True)))
+                        params=QueryParams(**params.model_dump(by_alias=True)),
+                        extensions=HTTPClientExtensions(route='operations/operations-summary'))
 
     def get_operations_summary(self, account_id: str) -> GetOperationsSummaryResponseSchema:
         """Получить сводку по операциям счёта (высокоуровневый метод).
@@ -143,7 +146,8 @@ class OperationsGatewayHTTPClient(BaseHTTPClient):
             >>> client = build_operations_gateway_http_client()
             >>> response = client.get_operation_receipt_api('op456')
         """
-        return self.get(f'operations/operation-receipt/{operation_id}')
+        return self.get(f'operations/operation-receipt/{operation_id}',
+                        extensions=HTTPClientExtensions(route='operations/operation-receipt/{operation_id}'))
 
     def get_operation_receipt(self, operation_id: str) -> GetOperationReceiptResponseSchema:
         """Получить чек по операции (высокоуровневый метод).
@@ -180,7 +184,8 @@ class OperationsGatewayHTTPClient(BaseHTTPClient):
             >>> client = build_operations_gateway_http_client()
             >>> response = client.get_operation_api('op456')
         """
-        return self.get(f'operations/{operation_id}')
+        return self.get(f'operations/{operation_id}',
+                        extensions=HTTPClientExtensions(route='operations/{operation_id}'))
 
     def get_operation(self, operation_id: str) -> GetOperationResponseSchema:
         """Получить данные операции по ID (высокоуровневый метод).
@@ -551,3 +556,8 @@ def build_operations_gateway_http_client() -> OperationsGatewayHTTPClient:
         >>> response = client.get_operations_api({'accountId': 'a123'})
     """
     return OperationsGatewayHTTPClient(client=build_gateway_http_client())
+
+def build_operations_locust_gateway_http_client(environment: Environment) -> OperationsGatewayHTTPClient:
+    return OperationsGatewayHTTPClient(client=build_gateway_locust_http_client(environment))
+
+

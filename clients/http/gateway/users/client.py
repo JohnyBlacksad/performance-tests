@@ -11,9 +11,10 @@
 """
 
 from uuid import uuid4
-from clients.http.base_client import BaseHTTPClient
+from locust.env import Environment
+from clients.http.base_client import BaseHTTPClient, HTTPClientExtensions
 from httpx import Response
-from clients.http.gateway.gateway_client import build_gateway_http_client
+from clients.http.gateway.gateway_client import build_gateway_http_client, build_gateway_locust_http_client
 from .schema import (
     GetUserResponseSchema,
     CreateUserRequestSchema,
@@ -47,7 +48,8 @@ class UserGatewayHTTPClient(BaseHTTPClient):
             >>> client = build_users_gateway_http_client()
             >>> response = client.get_user_api('u123')
         """
-        return self.get(f'users/{user_id}')
+        return self.get(f'users/{user_id}',
+                        extensions=HTTPClientExtensions(route='users/{user_id}'))
 
     def create_user_api(self, request: CreateUserRequestSchema) -> Response:
         """Создать нового пользователя (API-метод).
@@ -135,3 +137,7 @@ def build_users_gateway_http_client() -> UserGatewayHTTPClient:
         >>> user = client.get_user(user_id='u123')
     """
     return UserGatewayHTTPClient(client=build_gateway_http_client())
+
+def build_users_locust_gateway_http_client(environment: Environment) -> UserGatewayHTTPClient:
+    return UserGatewayHTTPClient(client=build_gateway_locust_http_client(environment))
+

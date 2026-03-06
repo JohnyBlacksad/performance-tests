@@ -5,8 +5,10 @@
 """
 
 from httpx import Client, URL, QueryParams, Response
-from typing import Any
+from typing import Any, TypedDict
 
+class HTTPClientExtensions(TypedDict, total=False):
+    route: str
 
 class BaseHTTPClient:
     """Базовый HTTP-клиент для выполнения API-запросов.
@@ -33,7 +35,11 @@ class BaseHTTPClient:
         """
         self.client = client
 
-    def get(self, url: URL | str, params: QueryParams | dict | None = None) -> Response:
+    def get(self,
+            url: URL | str,
+            params: QueryParams | dict | None = None,
+            extensions: HTTPClientExtensions | None = None) -> Response:
+
         """Отправить GET-запрос к указанному URL.
 
         Args:
@@ -46,9 +52,14 @@ class BaseHTTPClient:
         Raises:
             httpx.HTTPError: При возникновении ошибок HTTP.
         """
+
         return self.client.get(url, params=params)
 
-    def post(self, url: URL | str, json: Any = None, params: QueryParams | dict | None = None) -> Response:
+    def post(self,
+             url: URL | str,
+             json: Any = None,
+             params: QueryParams | dict | None = None,
+             extensions: HTTPClientExtensions | None = None) -> Response:
         """Отправить POST-запрос к указанному URL.
 
         Args:

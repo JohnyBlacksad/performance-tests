@@ -10,9 +10,10 @@
     >>> new_account = client.open_deposit_account(user_id='u123')
 """
 
-from httpx import Response
-from clients.http.base_client import BaseHTTPClient, QueryParams
-from clients.http.gateway.gateway_client import build_gateway_http_client
+from httpx import Response, QueryParams
+from locust.env import Environment
+from clients.http.base_client import BaseHTTPClient, HTTPClientExtensions
+from clients.http.gateway.gateway_client import build_gateway_http_client, build_gateway_locust_http_client
 from .schema import (
     GetAccountsQuerySchema,
     GetAccountResponseSchema,
@@ -53,7 +54,8 @@ class AccountsGatewayHTTPClient(BaseHTTPClient):
             >>> query = GetAccountsQuerySchema(user_id='u123')
             >>> response = client.get_account_api(query)
         """
-        return self.get('accounts', params=QueryParams(**query.model_dump(by_alias=True)))
+        return self.get('accounts', params=QueryParams(**query.model_dump(by_alias=True)),
+                        extensions=HTTPClientExtensions(route='accounts'))
 
     def get_account(self, user_id: str) -> GetAccountResponseSchema:
         """Получить счета пользователя (высокоуровневый метод).
@@ -250,3 +252,6 @@ def build_accounts_gateway_http_client() -> AccountsGatewayHTTPClient:
         >>> accounts = client.get_account(user_id='u123')
     """
     return AccountsGatewayHTTPClient(client=build_gateway_http_client())
+
+def build_accounts_locust_gateway_http_client(environment: Environment) -> AccountsGatewayHTTPClient:
+    return AccountsGatewayHTTPClient(client=build_gateway_locust_http_client(environment))
