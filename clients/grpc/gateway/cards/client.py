@@ -1,6 +1,6 @@
 from grpc import Channel
-
-from clients.grpc.client import GRPCClient, build_gateway_grpc_client
+from locust.env import Environment
+from clients.grpc.client import GRPCClient, build_gateway_grpc_client, build_gateway_locust_grpc_client
 from contracts.services.gateway.cards.cards_gateway_service_pb2_grpc import CardsGatewayServiceStub
 from contracts.services.gateway.cards.rpc_issue_physical_card_pb2 import IssuePhysicalCardRequest, IssuePhysicalCardResponse
 from contracts.services.gateway.cards.rpc_issue_virtual_card_pb2 import IssueVirtualCardRequest, IssueVirtualCardResponse
@@ -33,3 +33,6 @@ class CardsGatewayGRPCClient(GRPCClient):
 
 def build_cards_gateway_client() -> CardsGatewayGRPCClient:
     return CardsGatewayGRPCClient(channel=build_gateway_grpc_client())
+
+def build_cards_gateway_locust_grpc_client(environment: Environment) -> CardsGatewayGRPCClient:
+    return CardsGatewayGRPCClient(channel=build_gateway_locust_grpc_client(environment))

@@ -1,6 +1,6 @@
 from grpc import Channel
-
-from clients.grpc.client import GRPCClient, build_gateway_grpc_client
+from locust.env import Environment
+from clients.grpc.client import GRPCClient, build_gateway_grpc_client, build_gateway_locust_grpc_client
 from contracts.services.gateway.documents.documents_gateway_service_pb2_grpc import DocumentsGatewayServiceStub
 from contracts.services.gateway.documents.rpc_get_contract_document_pb2 import GetContractDocumentRequest, GetContractDocumentResponse
 from contracts.services.gateway.documents.rpc_get_tariff_document_pb2 import GetTariffDocumentRequest, GetTariffDocumentResponse
@@ -27,3 +27,6 @@ class DocumentsGatewayGRPCClients(GRPCClient):
 
 def build_documents_gateway_grpc_client() -> DocumentsGatewayGRPCClients:
     return DocumentsGatewayGRPCClients(channel=build_gateway_grpc_client())
+
+def build_documents_gateway_locust_grpc_client(environment: Environment) -> DocumentsGatewayGRPCClients:
+    return DocumentsGatewayGRPCClients(channel=build_gateway_locust_grpc_client(environment))

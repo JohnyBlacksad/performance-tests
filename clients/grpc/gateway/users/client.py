@@ -1,4 +1,5 @@
-from clients.grpc.client import GRPCClient, build_gateway_grpc_client
+from clients.grpc.client import GRPCClient, build_gateway_grpc_client, build_gateway_locust_grpc_client
+from locust.env import Environment
 from contracts.services.gateway.users.users_gateway_service_pb2_grpc import UsersGatewayServiceStub
 from contracts.services.gateway.users.rpc_get_user_pb2 import GetUserRequest, GetUserResponse
 from contracts.services.gateway.users.rpc_create_user_pb2 import CreateUserRequest, CreateUserResponse
@@ -33,3 +34,6 @@ class UserGatewayGRPCClient(GRPCClient):
 
 def build_users_gateway_grpc_client() -> UserGatewayGRPCClient:
     return UserGatewayGRPCClient(channel=build_gateway_grpc_client())
+
+def build_users_gateway_locust_grpc_client(environment: Environment) -> UserGatewayGRPCClient:
+    return UserGatewayGRPCClient(channel=build_gateway_locust_grpc_client(environment))
