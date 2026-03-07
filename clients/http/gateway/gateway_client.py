@@ -29,7 +29,21 @@ def build_gateway_http_client() -> Client:
     return Client(base_url='http://localhost:8003/api/v1/', timeout=100)
 
 def build_gateway_locust_http_client(environment: Environment) -> Client:
+    """Создать HTTP-клиент с интеграцией Locust для сбора метрик.
 
+    Создаёт клиент с event hooks для перехвата запросов и ответов,
+    отправляя метрики производительности в Locust.
+
+    Args:
+        environment: Экземпляр окружения Locust.
+
+    Returns:
+        Настроенный экземпляр httpx.Client с event hooks.
+
+    Example:
+        >>> client = build_gateway_locust_http_client(env)
+        >>> response = client.get('/users')
+    """
     return Client(base_url='http://localhost:8003/api/v1/', timeout=100,
                   event_hooks={
                       'request': [locust_request_event_hook],
