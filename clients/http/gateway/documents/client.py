@@ -124,5 +124,20 @@ def build_documents_gateway_http_client() -> DocumentsGatewayHTTPClient:
     return DocumentsGatewayHTTPClient(client=build_gateway_http_client())
 
 def build_documents_locust_gateway_http_client(environment: Environment) -> DocumentsGatewayHTTPClient:
+    """Создать HTTP-клиент для Documents Gateway API с интеграцией Locust.
+
+    Возвращает настроенный экземпляр DocumentsGatewayHTTPClient для работы
+    с API управления документами через Locust (сбор метрик).
+
+    Args:
+        environment: Окружение Locust для настройки клиента.
+
+    Returns:
+        Настроенный экземпляр DocumentsGatewayHTTPClient с Locust-интерцептором.
+
+    Example:
+        >>> client = build_documents_locust_gateway_http_client(environment)
+        >>> response = client.get_tariff_document_api(account_id='a123')
+    """
     return DocumentsGatewayHTTPClient(client=build_gateway_locust_http_client(environment))
 

@@ -139,5 +139,20 @@ def build_users_gateway_http_client() -> UserGatewayHTTPClient:
     return UserGatewayHTTPClient(client=build_gateway_http_client())
 
 def build_users_locust_gateway_http_client(environment: Environment) -> UserGatewayHTTPClient:
+    """Создать HTTP-клиент для User Gateway API с интеграцией Locust.
+
+    Возвращает настроенный экземпляр UserGatewayHTTPClient для работы
+    с API управления пользователями через Locust (сбор метрик).
+
+    Args:
+        environment: Окружение Locust для настройки клиента.
+
+    Returns:
+        Настроенный экземпляр UserGatewayHTTPClient с Locust-интерцептором.
+
+    Example:
+        >>> client = build_users_locust_gateway_http_client(environment)
+        >>> user = client.get_user(user_id='u123')
+    """
     return UserGatewayHTTPClient(client=build_gateway_locust_http_client(environment))
 

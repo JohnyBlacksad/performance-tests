@@ -9,8 +9,8 @@
     locust -f scenarios/grpc/gateway/get_documents/scenario.py
 """
 
-from locust import User, between, task
-
+from locust import task
+from tools.locust.user import LocustBaseUser
 from clients.grpc.gateway.locust import GatewayGRPCSequentialTaskSet
 from contracts.services.gateway.accounts.rpc_open_savings_account_pb2 import OpenSavingsAccountResponse
 from contracts.services.gateway.users.rpc_create_user_pb2 import CreateUserResponse
@@ -55,7 +55,7 @@ class GetDocumentsSequentialTaskSet(GatewayGRPCSequentialTaskSet):
         self.documents_client.get_tariff_document(self.open_saving_account_response.account.id)
 
 
-class GetDocumentUser(User):
+class GetDocumentUser(LocustBaseUser):
     """Пользователь для gRPC сценария тестирования получения документов.
 
     Attributes:
@@ -63,6 +63,4 @@ class GetDocumentUser(User):
         tasks: Набор задач для выполнения.
         wait_time: Время ожидания между задачами (1-3 секунды).
     """
-    host = 'localhost'
     tasks = [GetDocumentsSequentialTaskSet]
-    wait_time = between(1, 3)

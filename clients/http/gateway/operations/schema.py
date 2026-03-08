@@ -200,6 +200,28 @@ class GetOperationsSummaryQuerySchema(BaseModel):
 
 
 class MakeOperationBaseRequestSchema(BaseModel):
+    """Базовая модель запроса на создание операции.
+
+    Содержит общие поля для всех типов операций:
+    - status: Статус операции
+    - amount: Сумма операции
+    - card_id: Идентификатор карты
+    - account_id: Идентификатор счёта
+
+    Attributes:
+        status: Статус операции.
+        amount: Сумма операции.
+        card_id: Идентификатор карты.
+        account_id: Идентификатор счёта.
+
+    Пример использования:
+        >>> request = MakeOperationBaseRequestSchema(
+        ...     status=OperationStatus.COMPLETED,
+        ...     amount=1000,
+        ...     card_id='c1',
+        ...     account_id='a1'
+        ... )
+    """
     model_config = ConfigDict(populate_by_name=True)
     status: OperationStatus
     amount: float
@@ -208,6 +230,25 @@ class MakeOperationBaseRequestSchema(BaseModel):
 
     @classmethod
     def get_fake_data(cls, card_id, account_id, **kwargs):
+        """Сгенерировать тестовые данные для запроса.
+
+        Создаёт экземпляр модели с фейковыми данными, используя
+        переданные card_id и account_id.
+
+        Args:
+            card_id: Идентификатор карты.
+            account_id: Идентификатор счёта.
+            **kwargs: Дополнительные поля для переопределения.
+
+        Returns:
+            Экземпляр модели с тестовыми данными.
+
+        Example:
+            >>> request = MakeOperationBaseRequestSchema.get_fake_data(
+            ...     card_id='c1',
+            ...     account_id='a1'
+            ... )
+        """
         data = {
             'status': faker_ru.enum(OperationStatus),
             'amount': faker_ru.amount(),
@@ -217,18 +258,139 @@ class MakeOperationBaseRequestSchema(BaseModel):
         data.update(kwargs)
         return cls(**data)
 
-class MakeFeeOperationRequestSchema(MakeOperationBaseRequestSchema):pass
-class MakeTopUpOperationRequestSchema(MakeOperationBaseRequestSchema):pass
-class MakeCashbackOperationRequestSchema(MakeOperationBaseRequestSchema):pass
-class MakeTransferOperationRequestSchema(MakeOperationBaseRequestSchema):pass
-class MakeBillPaymentOperationRequestSchema(MakeOperationBaseRequestSchema):pass
-class MakeCashWithdrawalOperationRequestSchema(MakeOperationBaseRequestSchema):pass
+class MakeFeeOperationRequestSchema(MakeOperationBaseRequestSchema):
+    """Модель запроса на создание операции начисления комиссии.
+
+    Наследуется от MakeOperationBaseRequestSchema.
+
+    Пример использования:
+        >>> request = MakeFeeOperationRequestSchema(
+        ...     status=OperationStatus.COMPLETED,
+        ...     amount=100,
+        ...     card_id='c1',
+        ...     account_id='a1'
+        ... )
+    """
+    pass
+
+class MakeTopUpOperationRequestSchema(MakeOperationBaseRequestSchema):
+    """Модель запроса на создание операции пополнения счёта.
+
+    Наследуется от MakeOperationBaseRequestSchema.
+
+    Пример использования:
+        >>> request = MakeTopUpOperationRequestSchema(
+        ...     status=OperationStatus.COMPLETED,
+        ...     amount=5000,
+        ...     card_id='c1',
+        ...     account_id='a1'
+        ... )
+    """
+    pass
+
+class MakeCashbackOperationRequestSchema(MakeOperationBaseRequestSchema):
+    """Модель запроса на создание операции кэшбэка.
+
+    Наследуется от MakeOperationBaseRequestSchema.
+
+    Пример использования:
+        >>> request = MakeCashbackOperationRequestSchema(
+        ...     status=OperationStatus.COMPLETED,
+        ...     amount=500,
+        ...     card_id='c1',
+        ...     account_id='a1'
+        ... )
+    """
+    pass
+
+class MakeTransferOperationRequestSchema(MakeOperationBaseRequestSchema):
+    """Модель запроса на создание операции перевода.
+
+    Наследуется от MakeOperationBaseRequestSchema.
+
+    Пример использования:
+        >>> request = MakeTransferOperationRequestSchema(
+        ...     status=OperationStatus.COMPLETED,
+        ...     amount=10000,
+        ...     card_id='c1',
+        ...     account_id='a1'
+        ... )
+    """
+    pass
+
+class MakeBillPaymentOperationRequestSchema(MakeOperationBaseRequestSchema):
+    """Модель запроса на создание операции оплаты счёта.
+
+    Наследуется от MakeOperationBaseRequestSchema.
+
+    Пример использования:
+        >>> request = MakeBillPaymentOperationRequestSchema(
+        ...     status=OperationStatus.COMPLETED,
+        ...     amount=3000,
+        ...     card_id='c1',
+        ...     account_id='a1'
+        ... )
+    """
+    pass
+
+class MakeCashWithdrawalOperationRequestSchema(MakeOperationBaseRequestSchema):
+    """Модель запроса на создание операции снятия наличных.
+
+    Наследуется от MakeOperationBaseRequestSchema.
+
+    Пример использования:
+        >>> request = MakeCashWithdrawalOperationRequestSchema(
+        ...     status=OperationStatus.COMPLETED,
+        ...     amount=5000,
+        ...     card_id='c1',
+        ...     account_id='a1'
+        ... )
+    """
+    pass
 
 class MakePurchaseOperationRequestSchema(MakeOperationBaseRequestSchema):
+    """Модель запроса на создание операции покупки.
+
+    Наследуется от MakeOperationBaseRequestSchema и добавляет
+    поле category для категории покупки.
+
+    Attributes:
+        category: Категория покупки (например, 'groceries', 'coffee').
+
+    Пример использования:
+        >>> request = MakePurchaseOperationRequestSchema(
+        ...     status=OperationStatus.COMPLETED,
+        ...     amount=2500,
+        ...     card_id='c1',
+        ...     account_id='a1',
+        ...     category='groceries'
+        ... )
+    """
     category: str
 
     @classmethod
     def get_fake_data(cls, card_id, account_id, **kwargs):
+        """Сгенерировать тестовые данные для запроса покупки.
+
+        Создаёт экземпляр модели с фейковыми данными, используя
+        переданные card_id и account_id. Категория генерируется
+        автоматически, если не указана.
+
+        Args:
+            card_id: Идентификатор карты.
+            account_id: Идентификатор счёта.
+            **kwargs: Дополнительные поля для переопределения.
+
+        Returns:
+            Экземпляр модели с тестовыми данными.
+
+        Example:
+            >>> request = MakePurchaseOperationRequestSchema.get_fake_data(
+            ...     card_id='c1',
+            ...     account_id='a1',
+            ...     category='coffee'
+            ... )
+        """
         if "category" not in kwargs:
             kwargs["category"] = faker_ru.category()
         return super().get_fake_data(card_id=card_id, account_id=account_id, **kwargs)

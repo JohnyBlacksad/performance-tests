@@ -254,4 +254,19 @@ def build_accounts_gateway_http_client() -> AccountsGatewayHTTPClient:
     return AccountsGatewayHTTPClient(client=build_gateway_http_client())
 
 def build_accounts_locust_gateway_http_client(environment: Environment) -> AccountsGatewayHTTPClient:
+    """Создать HTTP-клиент для Accounts Gateway API с интеграцией Locust.
+
+    Возвращает настроенный экземпляр AccountsGatewayHTTPClient для работы
+    с API управления счетами через Locust (сбор метрик).
+
+    Args:
+        environment: Окружение Locust для настройки клиента.
+
+    Returns:
+        Настроенный экземпляр AccountsGatewayHTTPClient с Locust-интерцептором.
+
+    Example:
+        >>> client = build_accounts_locust_gateway_http_client(environment)
+        >>> accounts = client.get_account(user_id='u123')
+    """
     return AccountsGatewayHTTPClient(client=build_gateway_locust_http_client(environment))

@@ -12,7 +12,8 @@
 from clients.http.gateway.accounts.schema import OpenSavingAccountResponseSchema
 from clients.http.gateway.users.schema import CreateUserResponseSchema
 from clients.http.gateway.locust import GatewayHTTPSequentialTaskSet
-from locust import User, between, task
+from tools.locust.user import LocustBaseUser
+from locust import task
 
 
 class GetDocumentsSequentsTaskSet(GatewayHTTPSequentialTaskSet):
@@ -52,7 +53,7 @@ class GetDocumentsSequentsTaskSet(GatewayHTTPSequentialTaskSet):
         self.documents_client.get_tariff_document(self.open_saving_account_response.account.id)
         self.documents_client.get_contract_document(self.open_saving_account_response.account.id)
 
-class GetDocumentUser(User):
+class GetDocumentUser(LocustBaseUser):
     """Пользователь для сценария тестирования получения документов.
 
     Attributes:
@@ -60,6 +61,4 @@ class GetDocumentUser(User):
         tasks: Набор задач для выполнения.
         wait_time: Время ожидания между задачами (1-3 секунды).
     """
-    host = 'localhost'
     tasks = [GetDocumentsSequentsTaskSet]
-    wait_time = between(1, 3)

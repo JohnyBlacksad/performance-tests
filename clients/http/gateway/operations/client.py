@@ -558,6 +558,21 @@ def build_operations_gateway_http_client() -> OperationsGatewayHTTPClient:
     return OperationsGatewayHTTPClient(client=build_gateway_http_client())
 
 def build_operations_locust_gateway_http_client(environment: Environment) -> OperationsGatewayHTTPClient:
+    """Создать HTTP-клиент для Operations Gateway API с интеграцией Locust.
+
+    Возвращает настроенный экземпляр OperationsGatewayHTTPClient для работы
+    с API управления операциями через Locust (сбор метрик).
+
+    Args:
+        environment: Окружение Locust для настройки клиента.
+
+    Returns:
+        Настроенный экземпляр OperationsGatewayHTTPClient с Locust-интерцептором.
+
+    Example:
+        >>> client = build_operations_locust_gateway_http_client(environment)
+        >>> response = client.get_operations_api({'accountId': 'a123'})
+    """
     return OperationsGatewayHTTPClient(client=build_gateway_locust_http_client(environment))
 
 

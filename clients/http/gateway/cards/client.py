@@ -144,6 +144,21 @@ def build_cards_gateway_http_client() -> CardsGatewayHTTPClient:
     return CardsGatewayHTTPClient(client=build_gateway_http_client())
 
 def build_cards_locust_gateway_http_client(environment: Environment) -> CardsGatewayHTTPClient:
+    """Создать HTTP-клиент для Cards Gateway API с интеграцией Locust.
+
+    Возвращает настроенный экземпляр CardsGatewayHTTPClient для работы
+    с API управления картами через Locust (сбор метрик).
+
+    Args:
+        environment: Окружение Locust для настройки клиента.
+
+    Returns:
+        Настроенный экземпляр CardsGatewayHTTPClient с Locust-интерцептором.
+
+    Example:
+        >>> client = build_cards_locust_gateway_http_client(environment)
+        >>> card = client.issue_virtual_card(user_id='u123', account_id='a456')
+    """
     return CardsGatewayHTTPClient(client=build_gateway_locust_http_client(environment))
 
 
