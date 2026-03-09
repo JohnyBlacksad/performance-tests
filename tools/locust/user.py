@@ -9,6 +9,7 @@
 """
 
 from locust import User, between
+from config import settings
 
 class LocustBaseUser(User):
     """Базовый класс пользователя для Locust-тестов.
@@ -30,4 +31,7 @@ class LocustBaseUser(User):
     """
     host = 'localhost'
     abstract = True
-    wait_time = between(1, 3)
+    wait_time = between(
+        min_wait=settings.locust_user.min_wait,
+        max_wait=settings.locust_user.max_wait
+    )
