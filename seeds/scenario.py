@@ -9,6 +9,9 @@ from seeds.builder import build_grpc_seeds_builder
 from seeds.schema.plan import SeedsPlan
 from seeds.schema.result import SeedsResult
 from seeds.dumps import save_seeds_results, load_seeds_results
+from tools.logger import get_logger
+
+logger = get_logger('SEEDS_SCENARIO')
 
 class SeedsScenario(ABC):
     """Абстрактный базовый класс для сценариев генерации тестовых данных.
@@ -63,7 +66,9 @@ class SeedsScenario(ABC):
             >>> result = builder.build(plan)
             >>> scenario.save(result)
         """
+        logger.info(f'[{self.scenario}] Savings seeding result to file.')
         save_seeds_results(result=result, scenario=self.scenario)
+        logger.info(f'[{self.scenario}] Seeding result saved successfully.')
 
     def load(self) -> SeedsResult:
         """Загрузить результаты генерации из JSON-файла.
@@ -74,7 +79,10 @@ class SeedsScenario(ABC):
         Example:
             >>> result = scenario.load()
         """
-        return load_seeds_results(scenario=self.scenario)
+        logger.info(f'[{self.scenario}] Loading seeding from file.')
+        result = load_seeds_results(scenario=self.scenario)
+        logger.info(f'[{self.scenario}] Seeding result loaded successfully.')
+        return result
 
     def build(self) -> None:
         """Сгенерировать тестовые данные и сохранить результаты.
@@ -86,5 +94,8 @@ class SeedsScenario(ABC):
             >>> scenario = MyScenario()
             >>> scenario.build()
         """
+        plan_json = self.plan.model_dump_json(indent=2, exclude_defaults=True)
+        logger.info(f'[{self.scenario}] Starting seeding data generation for plan: {plan_json}.')
         result = self.builder.build(self.plan)
+        logger.info(f'[{self.scenario}] Seeding data generation completed.')
         self.save(result)
