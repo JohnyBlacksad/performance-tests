@@ -20,7 +20,7 @@ from .schema import (
     CreateUserRequestSchema,
     CreateUserResponseSchema
 )
-
+from tools.routes import APIRoutes
 
 class UserGatewayHTTPClient(BaseHTTPClient):
     """HTTP-клиент для User Gateway API.
@@ -48,8 +48,8 @@ class UserGatewayHTTPClient(BaseHTTPClient):
             >>> client = build_users_gateway_http_client()
             >>> response = client.get_user_api('u123')
         """
-        return self.get(f'users/{user_id}',
-                        extensions=HTTPClientExtensions(route='users/{user_id}'))
+        return self.get(f'{APIRoutes.USERS}/{user_id}',
+                        extensions=HTTPClientExtensions(route=f'{APIRoutes.USERS}/{{user_id}}'))
 
     def create_user_api(self, request: CreateUserRequestSchema) -> Response:
         """Создать нового пользователя (API-метод).
@@ -74,7 +74,7 @@ class UserGatewayHTTPClient(BaseHTTPClient):
             ... )
             >>> response = client.create_user_api(request)
         """
-        return self.post('users', json=request.model_dump(by_alias=True))
+        return self.post(f'{APIRoutes.USERS}', json=request.model_dump(by_alias=True))
 
     def get_user(self, user_id: str) -> GetUserResponseSchema:
         """Получить пользователя по ID (высокоуровневый метод).

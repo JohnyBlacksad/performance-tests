@@ -26,6 +26,7 @@ from .schema import (
     OpenCreditCardAccountRequestSchema,
     OpenCreditCardAccountResponseSchema
 )
+from tools.routes import APIRoutes
 
 class AccountsGatewayHTTPClient(BaseHTTPClient):
     """HTTP-клиент для Accounts Gateway API.
@@ -54,8 +55,8 @@ class AccountsGatewayHTTPClient(BaseHTTPClient):
             >>> query = GetAccountsQuerySchema(user_id='u123')
             >>> response = client.get_account_api(query)
         """
-        return self.get('accounts', params=QueryParams(**query.model_dump(by_alias=True)),
-                        extensions=HTTPClientExtensions(route='accounts'))
+        return self.get(f'{APIRoutes.ACCOUNTS}', params=QueryParams(**query.model_dump(by_alias=True)),
+                        extensions=HTTPClientExtensions(route=f'{APIRoutes.ACCOUNTS}'))
 
     def get_account(self, user_id: str) -> GetAccountResponseSchema:
         """Получить счета пользователя (высокоуровневый метод).
@@ -94,7 +95,7 @@ class AccountsGatewayHTTPClient(BaseHTTPClient):
             >>> request = OpenDepositAccountRequestSchema(user_id='u123')
             >>> response = client.open_deposit_account_api(request)
         """
-        return self.post('accounts/open-deposit-account', json=request.model_dump(by_alias=True))
+        return self.post(f'{APIRoutes.ACCOUNTS}/open-deposit-account', json=request.model_dump(by_alias=True))
 
     def open_deposit_account(self, user_id: str) -> OpenDepositAccountResponseSchema:
         """Открыть депозитный счёт (высокоуровневый метод).
@@ -134,7 +135,7 @@ class AccountsGatewayHTTPClient(BaseHTTPClient):
             >>> request = OpenSavingAccountRequestSchema(user_id='u123')
             >>> response = client.open_saving_account_api(request)
         """
-        return self.post('accounts/open-savings-account', json=request.model_dump(by_alias=True))
+        return self.post(f'{APIRoutes.ACCOUNTS}/open-savings-account', json=request.model_dump(by_alias=True))
 
     def open_saving_account(self, user_id: str) -> OpenSavingAccountResponseSchema:
         """Открыть накопительный счёт (высокоуровневый метод).
@@ -174,7 +175,7 @@ class AccountsGatewayHTTPClient(BaseHTTPClient):
             >>> request = OpenDebitCardAccountRequestSchema(user_id='u123')
             >>> response = client.open_debit_card_account_api(request)
         """
-        return self.post('accounts/open-debit-card-account', json=request.model_dump(by_alias=True))
+        return self.post(f'{APIRoutes.ACCOUNTS}/open-debit-card-account', json=request.model_dump(by_alias=True))
 
     def open_debit_card_account(self, user_id: str) -> OpenDebitCardAccountResponseSchema:
         """Открыть дебетовый счёт (высокоуровневый метод).
@@ -214,7 +215,7 @@ class AccountsGatewayHTTPClient(BaseHTTPClient):
             >>> request = OpenCreditCardAccountRequestSchema(user_id='u123')
             >>> response = client.open_credit_card_account_api(request)
         """
-        return self.post('accounts/open-credit-card-account', json=request.model_dump(by_alias=True))
+        return self.post(f'{APIRoutes.ACCOUNTS}/open-credit-card-account', json=request.model_dump(by_alias=True))
 
     def open_credit_card_account(self, user_id: str) -> OpenCreditCardAccountResponseSchema:
         """Открыть кредитный счёт (высокоуровневый метод).

@@ -18,6 +18,7 @@ from .schema import (
     GetTariffDocumentResponseSchema,
     GetContractDocumentResponseSchema
 )
+from tools.routes import APIRoutes
 
 class DocumentsGatewayHTTPClient(BaseHTTPClient):
     """HTTP-клиент для Documents Gateway API.
@@ -45,8 +46,8 @@ class DocumentsGatewayHTTPClient(BaseHTTPClient):
             >>> client = build_documents_gateway_http_client()
             >>> response = client.get_tariff_document_api('a123')
         """
-        return self.get(f'documents/tariff-document/{account_id}',
-                        extensions=HTTPClientExtensions(route='documents/tariff-document/{account_id}'))
+        return self.get(f'{APIRoutes.DOCUMENTS}/tariff-document/{account_id}',
+                        extensions=HTTPClientExtensions(route=f'{APIRoutes.DOCUMENTS}/tariff-document/{{account_id}}'))
 
     def get_tariff_document(self, account_id: str) -> GetTariffDocumentResponseSchema:
         """Получить тарифный документ по счёту (высокоуровневый метод).
@@ -84,8 +85,8 @@ class DocumentsGatewayHTTPClient(BaseHTTPClient):
             >>> client = build_documents_gateway_http_client()
             >>> response = client.get_contract_document_api('a123')
         """
-        return self.get(f'documents/contract-document/{account_id}',
-                        extensions=HTTPClientExtensions(route='documents/contract-document/{account_id}'))
+        return self.get(f'{APIRoutes.DOCUMENTS}/contract-document/{account_id}',
+                        extensions=HTTPClientExtensions(route=f'{APIRoutes.DOCUMENTS}/contract-document/{{account_id}}'))
 
     def get_contract_document(self, account_id: str) -> GetContractDocumentResponseSchema:
         """Получить договор по счёту (высокоуровневый метод).

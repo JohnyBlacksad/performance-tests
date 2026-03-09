@@ -19,7 +19,7 @@ from .schema import (
     IssuePhysicalCardRequestSchema,
     IssuePhysicalCardResponseSchema
 )
-
+from tools.routes import APIRoutes
 
 class CardsGatewayHTTPClient(BaseHTTPClient):
     """HTTP-клиент для Cards Gateway API.
@@ -51,7 +51,7 @@ class CardsGatewayHTTPClient(BaseHTTPClient):
             ... )
             >>> response = client.issue_virtual_card_api(request)
         """
-        return self.post('cards/issue-virtual-card', json=request.model_dump(by_alias=True))
+        return self.post(f'{APIRoutes.CARDS}/issue-virtual-card', json=request.model_dump(by_alias=True))
 
     def issue_physical_card_api(self, request: IssuePhysicalCardRequestSchema) -> Response:
         """Выпустить физическую карту (API-метод).
@@ -73,7 +73,7 @@ class CardsGatewayHTTPClient(BaseHTTPClient):
             ... )
             >>> response = client.issue_physical_card_api(request)
         """
-        return self.post('cards/issue-physical-card', json=request.model_dump(by_alias=True))
+        return self.post(f'{APIRoutes.CARDS}/issue-physical-card', json=request.model_dump(by_alias=True))
 
     def issue_virtual_card(self, user_id: str, account_id: str) -> IssueVirtualCardResponseSchema:
         """Выпустить виртуальную карту (высокоуровневый метод).
