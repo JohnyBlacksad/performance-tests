@@ -1,4 +1,4 @@
-name: Perfomance Tests
+name: Performance Tests
 
 on:
     workflow_dispatch:
@@ -42,7 +42,7 @@ jobs:
                 python-version: '3.12'
 
             - name: Clone Test services
-              run: git clone https://github.com/Nikita-Filonov/perfomance-qa-engineer-course.git
+              run: git clone https://github.com/Nikita-Filonov/performance-qa-engineer-course.git
 
             - name: Build base Docker image
               run: docker build -f Dockerfile.base -t base-service .
