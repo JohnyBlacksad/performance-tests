@@ -46,11 +46,11 @@ jobs:
 
             - name: Build base Docker image
               run: docker build -f Dockerfile.base -t base-service .
-              working-directory: perfomance-qa-engineer-course
+              working-directory: performance-qa-engineer-course
 
             - name: Start test services
               run: docker compose -f docker-compose.ci.yaml up -d --build
-              working-directory: perfomance-qa-engineer-course
+              working-directory: performance-qa-engineer-course
 
             - name: Install dependencies
               run: |
@@ -75,4 +75,4 @@ jobs:
             - name: Stop test services
               if: always()
               run: docker compose -f docker-compose.ci.yaml down -v
-              working-directory: perfomance-qa-engineer-course
+              working-directory: performance-qa-engineer-course
